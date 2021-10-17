@@ -153,9 +153,9 @@
                                 <tr>
                                     <th scope="row">{{$pos->nombre}}</th>
                                     <td>{{$pos->descripcion}}</td>
-                                    <td>$ {{$pos->pivot->costo_unitario}}</td>
+                                    <td>${{$pos->pivot->costo_unitario}}</td>
                                     <td>{{$pos->pivot->cantidad}}</td>
-                                    <td>$ {{$pos->pivot->total}}</td>
+                                    <td>${{$pos->pivot->total}}</td>
                                     @php
                                         $cont2 = $pos->pivot->total+$cont2;
                                     @endphp

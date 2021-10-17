@@ -15,17 +15,30 @@
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
-        <form method="get" action="/pdf" class="row">
-            <div class="input-group col-md-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">Default</span>
-                <input type="text" class="form-control" name = "prueba1" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            </div>
-            <div class="input-group col-md-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">Default</span>
-                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-            </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-dark">Dark</button>
+        <style>
+            .reporte{
+                float: right; 
+                margin-right: 20%; 
+                margin-top: -6%;
+                margin-bottom: 1%;
+                border: 1px dashed black;
+                padding: 20px;
+                border-radius: 10px;
+            }
+        </style>
+        <form method="get" action="/pdf" class="row" target="_blank">
+            <div class='reporte'>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Desde: </span>
+                    <input type="date" class="form-control" name = "fecha1" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Hasta: </span>
+                    <input type="date" class="form-control" name = "fecha2" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                </div>
+                <div class="input-group-sm mb-3" style='text-align: center; margin-top: 10px'>
+                    <button type="submit" class="btn btn-dark">Crear reporte</button>
+                </div>
             </div>
         </form>
         @can('edit', app($dataType->model_name))

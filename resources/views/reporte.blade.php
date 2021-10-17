@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Reporte de ventas</title>
     <style>
         table{
             font-family: arial, sans-serif;
@@ -21,27 +21,32 @@
         tr:nth-child(even){
             background-color: #dddddd;
         }
+
+        span{
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <h2>Historial de venta</h2>
+    <h1>Reporte de ventas</h1>
+    <p>Reporte generado entre las fechas: <span>{{$fecha1}}</span> y <span>{{$fecha2}}</span></p>
     <table>
         <tr>
             <th>Nombre del producto</th>
             <th>Precio</th>
-            <th>Categoria</th>
-            <th>Marca</th>
+            <th>Categoria/marca</th>
             <th>Cantidad</th>
             <th>Total</th>
+            <th>Fecha de la orden</th>
         </tr> 
         @foreach($historial AS $p)
             <tr>
                 <td>{{$p->nombre1}}</td>
-                <td>{{$p->precio}}</td>
-                <td>{{$p->nombre2}}</td>
-                <td>{{$p->nombre3}}</td>
+                <td>${{$p->precio}}</td>
+                <td>{{$p->nombre2}} / {{$p->nombre3}}</td>
                 <td>{{$p->cantidad}}</td>
-                <td>{{$p->total}}</td>
+                <td>${{$p->total}}</td>
+                <td>{{$p->fecha}}</td>
             </tr>
         @endforeach
     </table>

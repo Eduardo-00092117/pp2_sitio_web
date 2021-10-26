@@ -21,6 +21,9 @@ Route::get('/', function () {
 
 Route::get('/pdf', [ReportController::class, 'generar']);
 
+Route::get('/factura1', [ReportController::class, 'factura1']);
+Route::get('/factura2', [ReportController::class, 'factura2']);
+
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });

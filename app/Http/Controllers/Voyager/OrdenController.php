@@ -270,7 +270,7 @@ class OrdenController extends \TCG\Voyager\Http\Controllers\VoyagerBaseControlle
         $order = Orden::find($id);
         $producto = $order->producto;
 
-        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'isSoftDeleted', 'producto'));
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'isSoftDeleted', 'producto', 'id'));
     }
 
     //***************************************

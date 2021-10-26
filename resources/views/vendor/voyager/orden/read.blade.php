@@ -166,17 +166,123 @@
                         <table style="margin-right: 7%; display: flex; flex-direction: row; justify-content: flex-end" >
                             <tr>
                                 <td style="text-align: right; font-weight: bold;padding-right: 10px">Total a pagar: </td>
-                                <td>$ {{$cont2}}</td>
+                                <td>$ <span id="cont">{{$cont2}}</span></td>
                             </tr>
                         </table>
-                        <div style='display: inline-block; font-weight: bold;'>
-                            
+                        <style>
+                            #efectivo, #tarjeta{
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                            }
+                            #tarjeta{
+                                display: none;
+                            }
+                        </style>
+                        <div>
+                            <h1 style='text-align:center; display:block;'>Método de pago</h1>
+                            <br>
+                            <div style='text-align:center;'>
+                                <input type="Radio" name="colorin" id='prueba1' checked> Efectivo 
+                                <input type="Radio" name="colorin" id='prueba2' style='margin-left: 20px;'> Tarjeta de credito/debito
+                            </div>
+                            <br>
+                            <div id='efectivo'>
+                                <form action="/factura1" method="get" target="_blank">
+                                    <div class='row'>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">Recibido</span>
+                                            <input type="text" name='recibido' id='recibido' class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        </div>
+                                        <br>
+                                        <div>
+                                            <label for="">Vuelto</label>
+                                            <p id='vuelto' name='vuelto'>$0 </p>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <input style='display:none; float: right;' type="text" id='vuelto2' name='vuelto' class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <input style='display:none; float: right;' value='{{$id}}' type="text" id='orden' name='orden' class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        </div>
+                                        <br>
+                                        <input class="btn btn-success" type="submit" value="Generar factura">
+                                    </div>
+                                </form>
+                            </div>
+                            <div id='tarjeta'>
+                                <form action="/factura2" method="get" target="_blank">
+                                    <div class='row'>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">Nombre de la tarjeta</span>
+                                            <input type="text" id='nombre' name='nombre' class="form-control" placeholder='Eduardo López' aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        </div>
+                                        <br>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">Número de tarjeta</span>
+                                            <input type="text" id='numero' name='numero' class="form-control" placeholder='XXXX-XXXX-XXXX-XXXX' aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        </div>
+                                        <br>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">Fecha de expiración</span>
+                                            <input type="text" id='fecha' name='fecha' class="form-control" placeholder='dd/yy' aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        </div>
+                                        <br>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text" id="inputGroup-sizing-default">Codigo</span>
+                                            <input type="text" id='codigo' name='pin' class="form-control" placeholder='345' aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <input style='display:none; float: right;' value='{{$id}}' type="text" id='orden' name='orden' class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                        </div>
+                                        <br>
+                                        <input class="btn btn-success" type="submit" value="Generar factura">
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+        <script>
+            var entrada = document.getElementById('recibido');
+            entrada.addEventListener('keyup',botones);
+            var salida = document.getElementById('vuelto');
+            var salida2 = document.getElementById('vuelto2');
+            var cancelar = document.getElementById('cont').textContent;
+            var cont = 0;
+            function botones () {
+                var valor = document.getElementById("recibido").value;
+                if(valor.trim() == ''){
+                    salida.innerHTML='$0';
+                } else{
+                    var tot = parseFloat(valor) - parseFloat(cancelar);
+                    salida.innerHTML='$'+tot;
+                    salida2.value = tot;
+                }
+            }
+            var check = document.getElementById('prueba1');
+            check.addEventListener('click',cambiaColor);
+            var check2 = document.getElementById('prueba2');
+            check2.addEventListener('click',cambiaColor);
+            function cambiaColor() { 
+                if(document.getElementById('prueba1').checked){
+                    document.getElementById('efectivo').style.display = "flex";
+                    document.getElementById('tarjeta').style.display = "none";
+                    document.getElementById('nombre').value = '';
+                    document.getElementById('numero').value = '';
+                    document.getElementById('fecha').value = '';
+                    document.getElementById('codigo').value = '';
+                } else if(document.getElementById('prueba2').checked){
+                    document.getElementById('efectivo').style.display = "none";
+                    document.getElementById('recibido').value = '';
+                    salida.innerHTML='$0';
+                    document.getElementById('tarjeta').style.display = "flex";
+                }
+            } 
+        </script>
 
     {{-- Single delete modal --}}
     <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">

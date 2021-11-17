@@ -26,10 +26,18 @@ class ReportController extends Controller
 
     public function factura1(Request $request){
         $recibido = $request->Input('recibido');
-        $vuelto = $request->Input('vuelto');
+        $vuelto = 0;
         $id = $request->Input('orden');
         $hoy = date('d-m-Y');
-        $factura = \DB::select('SELECT o.id as idOrden, p.nombre as nombreProducto, p.precio, od.cantidad, od.total, c.id as idCliente, c.nombre as nombreCliente, c.apellido FROM orden_detalle od, orden o, producto p, cliente c WHERE od.orden_id = o.id and p.id = od.producto_id and o.idCliente = c.id and od.orden_id = '.$id.'');
+        $factura = \DB::select('SELECT o.id as idOrden, p.id as idProducto, p.nombre as nombreProducto, p.precio, p.descripcion, od.cantidad, od.total, c.id as idCliente, p.idMarca, p.idCategoria, c.nombre as nombreCliente, c.apellido FROM orden_detalle od, orden o, producto p, cliente c WHERE od.orden_id = o.id and p.id = od.producto_id and o.idCliente = c.id and od.orden_id = '.$id.'');
+        foreach($factura as $productoList){
+            $vuelto = $vuelto+1;
+            $productoSelect = \DB::select('SELECT existencia FROM producto where id='.$productoList->idProducto.'');
+            $nuevaCantidad = $productoSelect[0]->existencia-$productoList->cantidad;
+            \DB::update('update producto set existencia = '.$nuevaCantidad.' where id = ?', [$productoList->idProducto]);
+            \DB::insert('INSERT INTO historial_venta(idCategoria, idMarca, idOrden, nombre, precio, descripcion, cantidad, total) 
+                        values (?, ?, ?, ?, ?, ?, ?, ?)', [$productoList->idCategoria, $productoList->idMarca, $productoList->idOrden, $productoList->nombreProducto, $productoList->precio, $productoList->descripcion, $productoList->cantidad, $productoList->total]);
+		} 
         $view = \View::make('reporteFactura', compact('factura', 'recibido', 'vuelto', 'hoy'))->render();
         $pdf = \App::make('dompdf.wrapper');
         $pdf -> loadHTML($view);
@@ -39,7 +47,15 @@ class ReportController extends Controller
     public function factura2(Request $request){
         $id = $request->Input('orden');
         $hoy = date('d-m-Y');
-        $factura = \DB::select('SELECT o.id as idOrden, p.nombre as nombreProducto, p.precio, od.cantidad, od.total, c.id as idCliente, c.nombre as nombreCliente, c.apellido FROM orden_detalle od, orden o, producto p, cliente c WHERE od.orden_id = o.id and p.id = od.producto_id and o.idCliente = c.id and od.orden_id = '.$id.'');
+        $factura = \DB::select('SELECT o.id as idOrden, p.id as idProducto, p.nombre as nombreProducto, p.precio, p.descripcion, od.cantidad, od.total, c.id as idCliente, p.idMarca, p.idCategoria, c.nombre as nombreCliente, c.apellido FROM orden_detalle od, orden o, producto p, cliente c WHERE od.orden_id = o.id and p.id = od.producto_id and o.idCliente = c.id and od.orden_id = '.$id.'');
+        foreach($factura as $productoList){
+
+            $productoSelect = \DB::select('SELECT existencia FROM producto where id='.$productoList->idProducto.'');
+            $nuevaCantidad = $productoSelect[0]->existencia-$productoList->cantidad;
+            \DB::update('update producto set existencia = '.$nuevaCantidad.' where id = ?', [$productoList->idProducto]);
+            \DB::insert('INSERT INTO historial_venta(idCategoria, idMarca, idOrden, nombre, precio, descripcion, cantidad, total) 
+                        values (?, ?, ?, ?, ?, ?, ?, ?)', [$productoList->idCategoria, $productoList->idMarca, $productoList->idOrden, $productoList->nombreProducto, $productoList->precio, $productoList->descripcion, $productoList->cantidad, $productoList->total]);
+		} 
         $view = \View::make('reporteFactura2', compact('factura', 'hoy'))->render();
         $pdf = \App::make('dompdf.wrapper');
         $pdf -> loadHTML($view);
